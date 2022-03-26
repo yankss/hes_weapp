@@ -1,0 +1,33 @@
+.formItem {
+  margin: 30rpx 0 30rpx 0;
+  background: aliceblue;
+  border-radius: 40rpx;
+  padding: 20rpx;
+}
+.headerBar {
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+}
+.actionButton {
+  margin: 0;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40%;
+  border-radius: 40rpx;
+  background: #8cbec5;
+  box-shadow: 1rpx 1rpx 8rpx black;
+}
+.actionButton::after {
+  border: 0;
+}
+.actionBottomBar {
+  position: sticky;
+  width: 100vw;
+  bottom: 30rpx;
+  display: flex;
+  height: 7vh;
+  justify-content: space-evenly;
+}

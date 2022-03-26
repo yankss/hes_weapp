@@ -1,0 +1,62 @@
+.headerBar {
+  position: sticky;
+  z-index: 999;
+  top: o;
+}
+.tagSearchBar {
+  padding: 0 30rpx 30rpx 0;
+}
+.formItem {
+  margin: 30rpx 0 30rpx 0;
+  background: aliceblue;
+  border-radius: 40rpx;
+  padding: 20rpx;
+}
+.userInfoBar {
+  display: flex;
+  align-items: center;
+  padding: 30rpx;
+}
+.actionBottomBar {
+  position: absolute;
+  width: 100vw;
+  bottom: 30rpx;
+  display: flex;
+  height: 7vh;
+  justify-content: space-evenly;
+}
+.actionButton {
+  margin: 0;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40%;
+  border-radius: 40rpx;
+  background: #8cbec5;
+  box-shadow: 1rpx 1rpx 8rpx black;
+}
+.actionButton::after {
+  border: 0;
+}
+.modalHeader {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  font-weight: bold;
+}
+.newTagButton {
+  margin: 0;
+  height: 40%;
+  width: 30%;
+  font-size: 24rpx;
+  padding: 0;
+  font-weight: 500;
+  margin-left: 100rpx;
+  border-radius: 30rpx;
+  color: #ffffff;
+  background: #4fc08d;
+}
+.newTagModal {
+  z-index: 9999;
+}

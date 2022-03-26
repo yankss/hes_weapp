@@ -1,0 +1,39 @@
+.loginText {
+    color: darkcyan;
+}
+.mainPage {
+    font-weight: 400;
+    font-size: 20rpx;
+}
+.landlordText {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.landlordMainText {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 30rpx;
+  }
+  .landlordTagStyle {
+    color: #78A4F4 !important;
+    background-color: #fff !important;
+    border-radius: 0;
+  }
+  .mroelandlordInfoButton {
+    margin: 0;
+    border: 0;
+    font-size: 22rpx;
+  }
+  .landlordInfo {
+    padding: 30rpx;
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 10rpx solid #efefef;
+  }
+  .mainContainer {
+    margin: 30rpx;
+  }

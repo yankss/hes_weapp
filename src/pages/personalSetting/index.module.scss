@@ -1,0 +1,43 @@
+.mainContainer {
+    background: rgb(228, 228, 228);
+    height: 100vh;
+}
+.formContainer {
+    padding: 20rpx;
+    border-radius: 20rpx;
+}
+.formItem {
+    margin: 0rpx;
+    padding-left: 20rpx;
+    text-align: end;
+}
+.formItem:nth-child(1) {
+    border-top-left-radius: 20rpx;
+    border-top-right-radius: 20rpx;
+}
+.formItem:nth-last-child(1) {
+    border-bottom-left-radius: 20rpx;
+    border-bottom-right-radius: 20rpx;
+}
+.logoutButton {
+    width: 95%;
+    border: 0px;
+    color: red;
+}
+.switchUserButton {
+    width: 95%;
+    margin-top: 20rpx;
+    border: 0px;
+}
+.birthdayBar {
+    padding: 24rpx 0rpx 24rpx 24rpx;
+}
+.avatarBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+}
+.userAvatar {
+    margin: 10rpx;
+}

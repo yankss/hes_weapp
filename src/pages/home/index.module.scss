@@ -1,0 +1,50 @@
+.mainContainer {
+    height: 100%;
+    background: #f3f3f3;
+    
+}
+.loginText {
+    color: darkcyan;
+}
+.mainPage {
+    font-weight: 400;
+    font-size: 20rpx;
+    position: relative;
+}
+.swiper {
+    height: 20vh;
+    margin: auto;
+    border-radius: 20%;
+}
+.swiperImg1 {
+    background: aquamarine;
+    background-image: url('https://easyhouse-bucket.oss-cn-guangzhou.aliyuncs.com/%E9%A6%96%E9%A1%B5%E6%8F%92%E5%9B%BE1');
+    background-position: center;
+    background-size: cover;
+    height: 100%;
+}
+.swiperImg2 {
+    background: blanchedalmond;
+    background-image: url('https://easyhouse-bucket.oss-cn-guangzhou.aliyuncs.com/%E9%A6%96%E9%A1%B5%E6%8F%92%E5%9B%BE2');
+    height: 100%;
+    background-position: center;
+    background-size: cover;
+}
+.swiperImg3 {
+    background: darkcyan;
+    background-image: url('https://easyhouse-bucket.oss-cn-guangzhou.aliyuncs.com/%E9%A6%96%E9%A1%B5%E6%8F%92%E5%9B%BE3');
+    height: 100%;
+    background-position: center;
+    background-size: cover;
+}
+.actionList {
+    background: white;
+    margin-top: 20rpx;
+}
+.houseList {
+    margin-top: 20rpx;
+}
+
+.weqwe:nth-child(n+2) {
+    margin-left: 10rpx;
+}

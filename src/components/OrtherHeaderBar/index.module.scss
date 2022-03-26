@@ -1,0 +1,43 @@
+.headerBar {
+    width: 100%;
+    height: 200rpx;
+    background-color: #09628b;
+    z-index: 100;
+    display: flex;
+    justify-content: start;
+    align-items: flex-end;
+}
+.headerBarContainer {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding-bottom: 30rpx;
+}
+.searchBar {
+    width: 50%;
+    height: 20%;
+    margin-left: 20rpx;
+    border-radius: 10rpx;
+}
+.appName {
+    font-weight: bold;
+    margin-left: 20rpx;
+    color: aliceblue;
+    font-size: 36rpx;
+}
+.iconView {
+    background-color: aliceblue;
+    border-radius: 50%;
+    margin-left: 20rpx;
+}
+.titleStyles {
+    margin-left: 20rpx;
+    font-weight: bold;
+    color: aliceblue;
+}
+.mainContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40rpx;
+}

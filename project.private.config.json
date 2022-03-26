@@ -1,0 +1,96 @@
+{
+  "setting": {},
+  "condition": {
+    "plugin": {
+      "list": []
+    },
+    "game": {
+      "list": []
+    },
+    "gamePlugin": {
+      "list": []
+    },
+    "miniprogram": {
+      "list": [
+        {
+          "name": "pages/personalSetting/index",
+          "pathName": "pages/personalSetting/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/index/index",
+          "pathName": "pages/index/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/houseDetail/index",
+          "pathName": "pages/houseDetail/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/houseVR/index",
+          "pathName": "pages/houseVR/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/landlordDetailInfo/index",
+          "pathName": "pages/landlordDetailInfo/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/noHouse/index",
+          "pathName": "pages/noHouse/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/myHouse/index",
+          "pathName": "pages/myHouse/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/login/index",
+          "pathName": "pages/login/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/topicPage/index",
+          "pathName": "pages/topicPage/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/topicDetail/index",
+          "pathName": "pages/topicDetail/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/newTopicPage/index",
+          "pathName": "pages/newTopicPage/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/certificationApplication/index",
+          "pathName": "pages/certificationApplication/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/mySubscribe/index",
+          "pathName": "pages/mySubscribe/index",
+          "query": "",
+          "scene": null
+        }
+      ]
+    }
+  }
+}

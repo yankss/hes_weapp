@@ -1,0 +1,65 @@
+.InfoCard {
+  width: 90vw;
+  margin: auto;
+  margin-top: 20rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 0 10rpx #09628b;
+  border-radius: 10rpx;
+  padding: 20rpx;
+}
+.baseInfo {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.rateBar {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20rpx;
+}
+.rateContainer {
+  display: flex;
+  align-items: center;
+}
+.rateValue {
+  font-weight: bold;
+  font-size: 46rpx;
+}
+.InfoForApp {
+  display: flex;
+  justify-content: space-between;
+  padding: 20rpx;
+}
+.InfoForAppItem {
+  text-align: center;
+  font-size: 26rpx;
+}
+.bottomBar {
+  position: sticky;
+  bottom: 0;
+  width: 100vw;
+  display: flex;
+  padding-bottom: 40rpx;
+  background: white;
+  height: 6vh;
+  align-items: center;
+  justify-content: space-around;
+}
+.favoritesButton {
+  width: 30vw;
+  border-radius: 0;
+  margin: 0;
+}
+.bottomBarTag {
+  padding-right: 10rpx;
+}
+.commentButton {
+  width: 30vw;
+  margin: 0;
+  border-radius: 0;
+}
+.callPhoneButton {
+  width: 30vw;
+  border-radius: 0;
+  margin: 0;
+}

@@ -1,0 +1,103 @@
+.topicBar {
+  display: flex;
+  margin: 30rpx 10rpx 30rpx 30rpx;
+}
+.headerBar {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+.topicTitle {
+  flex: 6;
+  font-weight: bold;
+  font-size: 38rpx;
+}
+.collectionBtn::after {
+  border: 0 !important;
+}
+.collectionBtn {
+  padding-right: 5rpx;
+  border-radius: 20px;
+  background: #d7f0f0;
+  margin: 14rpx;
+  color: #72b56bed;
+  width: 25%;
+  font-size: 22rpx;
+  padding: 0;
+  height: 3vh;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.authorInfo {
+  display: flex;
+  align-items: center;
+  margin: 30rpx;
+}
+.commenterInfo {
+  display: flex;
+  align-items: center;
+  margin: 30rpx;
+  margin-left: 0;
+}
+.userAvatar {
+  width: 70rpx;
+  height: 70rpx;
+  margin-left: 30rpx;
+}
+.commentBarUserAvatar {
+  width: 60rpx;
+  height: 60rpx;
+}
+.topicContent {
+  margin: 30rpx;
+}
+.diverBar {
+  width: 100vw;
+  height: .5vh;
+  background: #d2d2d254;
+}
+.myCommentContainer {
+  margin: 30rpx;
+}
+.commentBar {
+  display: flex;
+  align-items: center;
+}
+.commentBottomBar {
+  display: flex;
+  align-items: center;
+  position: sticky;
+  width: 100vw;
+  bottom: 0rpx;
+  background: #ffffff;
+  height: 8vh;
+  padding-bottom: 30rpx;
+}
+.commentInput {
+  background: aliceblue;
+  padding: 20rpx 20rpx 20rpx 30rpx;
+  border-radius: 60rpx;
+  width: 75%;
+}
+.commentContent {
+  font-size: 30rpx;
+}
+.commentTime {
+  color: #bfbfbf;
+  font-size: 24rpx;
+  margin: 14rpx 0 0 0;
+}
+.commentContainer {
+  margin: 30rpx;
+}
+.moduleTitle {
+  font-weight: bold;
+  font-size: 36rpx;
+}
+.myCommentTitle {
+  margin-bottom: 30rpx;
+  font-weight: bold;
+  font-size: 36rpx;
+}

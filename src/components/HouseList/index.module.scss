@@ -1,0 +1,47 @@
+.listItem {
+  display: flex;
+  background: white;
+  padding: 30rpx;
+}
+.houseImg {
+  flex: 1.3;
+  height: 200rpx;
+  object-fit: cover;
+}
+.houseInfo {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-left: 10rpx;
+}
+.houseDescriptionTitle {
+  font-weight: 500;
+  font-size: 28rpx;
+}
+.houseSizeInfo {
+  font-size: 22rpx;
+  color: gray;
+}
+.tagStyle {
+  color: #78A4F4 !important;
+  background-color: #fff !important;
+}
+.tagStyle:nth-child(n+2) {
+  margin-left: 10rpx;
+}
+.houseRent {
+  color: red;
+}
+.diver {
+  background: #E0E3DA;
+  width: 90%;
+  height: 1rpx;
+  margin: auto;
+}
+.isDeleteIcon {
+  height: 32rpx;
+  width: 32rpx;
+  padding: 10rpx;
+  padding-top: 0px;
+}

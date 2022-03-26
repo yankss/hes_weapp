@@ -1,0 +1,16 @@
+.colItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 20rpx;
+  border: 1px solid;
+}
+.itemLabel {
+  background-color: #78a4f4;
+  color: white;
+  width: 170rpx;
+  border-radius: 10rpx;
+  height: 60rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

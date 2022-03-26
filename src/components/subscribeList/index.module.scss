@@ -1,0 +1,37 @@
+.subscribeItem {
+  margin: 20rpx 0;
+}
+.subscribeDateBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: bold;
+}
+.extendChar {
+  height: 40rpx;
+  width: 40rpx;
+  margin-right: 30rpx;
+}
+.houseInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  height: 13vh;
+}
+.houseImg {
+  height: 160rpx;
+  flex: 1;
+}
+.houseText {
+  margin-left: 20rpx;
+  flex: 2;
+}
+.oneLine {
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  overflow: hidden;
+}
+.at-action-sheet__container {
+  padding: 0;
+}

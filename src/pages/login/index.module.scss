@@ -1,0 +1,74 @@
+.mainBody {
+  position: relative;
+  background-color: #444c4c;
+  width: 100vw;
+  height: 100vh;
+  perspective: 1000px;
+}
+.loginCard {
+  position: absolute;
+  width: 100vw;
+  top: 20vh;
+  height: 70%;
+  transform: rotateY(0deg);
+  backface-visibility: hidden;
+  transition: transform .3s ease-in-out;
+}
+.registerCard {
+  position: absolute;
+  width: 100vw;
+  top: 20vh;
+  height: 70%;
+  transform: rotateY(-180deg);
+  backface-visibility: hidden;
+  transition: transform .3s ease-in-out;
+}
+.flexBox {
+  display: flex;
+  flex-direction: column;
+  height: 60vh;
+  justify-content: space-around;
+}
+.loginForm  {
+  left: 10vw;
+  width: 80%;
+  border-radius: 20rpx;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 40rpx #ffffff;
+  background-color: rgb(255 255 255 / 68%);
+}
+.registerForm {
+  left: 10vw;
+  width: 80%;
+  border-radius: 20rpx;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 40rpx #ffffff;
+  background-color: rgb(255 255 255 / 68%);
+}
+.actionBar {
+  display: flex;
+}
+.cardTitle {
+  text-align: center;
+  font-size: 40rpx;
+}
+.inputBar {
+  margin: 20rpx;
+  border-radius: 40rpx;
+}
+.appName {
+  position: absolute;
+  top: 8vh;
+  left: 40vw;
+  width: 20vw;
+  height: 5vh;
+  font-size: 50rpx;
+  color: #cad3da;
+  text-shadow: 0 0 10px #c8cbce;
+}
