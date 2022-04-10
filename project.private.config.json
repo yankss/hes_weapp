@@ -89,6 +89,18 @@
           "pathName": "pages/mySubscribe/index",
           "query": "",
           "scene": null
+        },
+        {
+          "name": "pages/VRHouse/index",
+          "pathName": "pages/VRHouse/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/VRhouseApp/index",
+          "pathName": "pages/VRhouseApp/index",
+          "query": "",
+          "scene": null
         }
       ]
     }

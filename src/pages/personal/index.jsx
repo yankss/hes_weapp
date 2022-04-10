@@ -3,21 +3,15 @@ import { View, Text } from '@tarojs/components'
 import { AtIcon, AtAvatar, AtGrid, AtSteps } from 'taro-ui'
 import styles from './index.module.scss';
 export default function Personal() {
-  const [hotActionTabList, sethotActionTabList] = useState([]);
   const [moreActionTabList, setMoreActionTabList] = useState([]);
+  const [userObj, setUserObj] = useState({})
   const [current, setCurrent] = useState(4)
 
   useEffect(() => {
-    sethotActionTabList([
-      { 
-        value: '认证申请', 
-        image: 'https://easyhouse-bucket.oss-cn-guangzhou.aliyuncs.com/%E8%AE%A4%E8%AF%81%E4%B8%AD%E5%BF%83.png', 
-      },
-      { 
-        value: '话题', 
-        image: 'https://easyhouse-bucket.oss-cn-guangzhou.aliyuncs.com/%E8%AF%9D%E9%A2%98.png', text: '100', 
-        max: 99 }
-    ])
+    setUserObj({
+      avatar: wx.getStorageSync('avatar'),
+      username: wx.getStorageSync('username')
+    })
     setMoreActionTabList([
       {
         image: 'https://easyhouse-bucket.oss-cn-guangzhou.aliyuncs.com/%E8%AE%A4%E8%AF%81%E4%B8%AD%E5%BF%83.png',
@@ -151,9 +145,9 @@ export default function Personal() {
       <View className={styles.mainContainerTop}>
         <View className={styles.userInfoMain}>
           <View className={styles.userInfo}>
-            <AtAvatar circle image='https://easyhouse-bucket.oss-cn-guangzhou.aliyuncs.com/male'></AtAvatar>
+            <AtAvatar circle image={userObj.avatar}></AtAvatar>
             <View className={styles.userText}>
-              <View className={styles.userName}>Yankss</View>
+              <View className={styles.userName}>{userObj.username}</View>
               <View className={styles.identity}>租客</View>
             </View>
           </View>

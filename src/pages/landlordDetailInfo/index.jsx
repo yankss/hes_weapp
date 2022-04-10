@@ -33,7 +33,6 @@ export default function LandlordDetailInfo() {
 
   useEffect(() => {
     setHouseListData([
-      1,2,3,
     ])
   }, [])
     
@@ -85,24 +84,6 @@ export default function LandlordDetailInfo() {
           <View>
             <View>Ta的房源</View>
             <HouseList houseListData={houseListData}/>
-          </View>
-          <View className={styles.bottomBar}>
-            {
-              isFavorites === true ? (<AtButton onClick={(e) => getFavorites(e, false)} type={'secondary'} size='small' className= {styles.favoritesButton}>
-                  <AtIcon className={styles.bottomBarTag} value='star-2' size='20' ></AtIcon>收藏
-              </AtButton>)
-              : (
-                  <AtButton onClick={(e) => getFavorites(e, true)} type={'secondary'} size='small' className= {styles.favoritesButton}>
-                      <AtIcon className={styles.bottomBarTag} value='star' size='20' ></AtIcon>收藏
-                  </AtButton>
-              )
-            }
-            <AtButton type={'secondary'} size='small' className={styles.commentButton}>
-                <AtIcon className={styles.bottomBarTag} value='message' size='20' ></AtIcon>评论
-            </AtButton>
-            <AtButton type={'secondary'} size='small' className={styles.callPhoneButton}>
-                <AtIcon className={styles.bottomBarTag} value='phone' size='20' ></AtIcon>电话
-            </AtButton>
           </View>
         </View>
     )

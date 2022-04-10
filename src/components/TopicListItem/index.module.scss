@@ -30,6 +30,8 @@
   -webkit-box-orient: vertical;
   display: -webkit-box;
   overflow: hidden;
+  padding-right: 10rpx;
+  align-self: flex-start;
 }
 .topicTitle {
   margin: 10rpx 0 10rpx 0;

@@ -44,7 +44,6 @@
 .userAvatar {
   width: 70rpx;
   height: 70rpx;
-  margin-left: 30rpx;
 }
 .commentBarUserAvatar {
   width: 60rpx;
@@ -74,12 +73,13 @@
   background: #ffffff;
   height: 8vh;
   padding-bottom: 30rpx;
+  padding-left: 30rpx;
 }
 .commentInput {
   background: aliceblue;
   padding: 20rpx 20rpx 20rpx 30rpx;
   border-radius: 60rpx;
-  width: 75%;
+  width: 70%;
 }
 .commentContent {
   font-size: 30rpx;

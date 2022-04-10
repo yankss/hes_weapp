@@ -1,26 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { View, Image } from '@tarojs/components'
+import Taro, {  } from '@tarojs/taro'
 import { AtAvatar, AtImagePicker, AtInput, AtTextarea, AtCheckbox, AtModal, AtModalHeader, AtModalContent, AtModalAction, AtSearchBar } from 'taro-ui'
 import OrtherHeaderBar from '../../components/OrtherHeaderBar';
 import styles from './index.module.scss';
+import * as tagApi from '../../api/tagApi';
+import * as topicApi from '../../api/topicApi';
+import * as uploadApi from '../../api/uploadApi';
 export default function NewTopicPage(props) {
     
     const [userObject, setUserObject] = useState({});
     const [illustrations, setIllustrations] = useState([])
     const [topicFormItem, setTopicFormItem] = useState([
+        {
+            label: '标签类型',
+            key: 'tag',
+            type: 'Checkbox'
+        },
         {   
             label: '话题标题',
-            key: 'title',
+            key: 'topicTitle',
             type: 'text'
         },
         {
-            label: '标签类型',
-            key: 'tags',
-            type: 'Checkbox'
-        },
-        {
             label: '话题内容',
-            key: 'content',
+            key: 'mainContent',
             type: 'textarea'
         },
         {
@@ -40,56 +44,19 @@ export default function NewTopicPage(props) {
 
     useEffect(() => {
         setUserObject({
-            authorName: 'Yankss',
-            avatar: 'https://easyhouse-bucket.oss-cn-guangzhou.aliyuncs.com/male'
+            authorName: wx.getStorageSync('username'),
+            avatar: wx.getStorageSync('avatar')
         })
-        setCheckboxOption([
-            {
-                value: 'list1',
-                label: 'iPhone X',
-                desc: '部分地区提供电子普通发票，用户可自行打印，效力等同纸质普通发票，具体以实际出具的发票类型为准。'
-            },
-            {
-                value: 'list2',
-                label: 'HUAWEI P20'
-            },
-            {
-                value: 'list3',
-                label: 'OPPO Find X',
-                desc: '部分地区提供电子普通发票，用户可自行打印，效力等同纸质普通发票，具体以实际出具的发票类型为准。',
-                disabled: false
-            },
-            {
-                value: 'list4',
-                label: 'vivo NEX',
-                desc: '部分地区提供电子普通发票，用户可自行打印，效力等同纸质普通发票，具体以实际出具的发票类型为准。',
-                disabled: false
-            },
-            {
-                value: 'list5',
-                label: 'vivo NEX',
-                desc: '部分地区提供电子普通发票，用户可自行打印，效力等同纸质普通发票，具体以实际出具的发票类型为准。',
-                disabled: false
-            },
-            {
-                value: 'list6',
-                label: 'vivo NEX',
-                desc: '部分地区提供电子普通发票，用户可自行打印，效力等同纸质普通发票，具体以实际出具的发票类型为准。',
-                disabled: false
-            },
-            {
-                value: 'list7',
-                label: 'vivo NEX',
-                desc: '部分地区提供电子普通发票，用户可自行打印，效力等同纸质普通发票，具体以实际出具的发票类型为准。',
-                disabled: false
-            },
-            {
-                value: 'list8',
-                label: 'vivo NEX',
-                desc: '部分地区提供电子普通发票，用户可自行打印，效力等同纸质普通发票，具体以实际出具的发票类型为准。',
-                disabled: false
-            },
-        ])
+        tagApi.getAllTag().then(res => {
+            let checkboxOptions = res.data;
+            checkboxOptions = checkboxOptions.map(item => {
+                item.value = item.tagName;
+                item.label = item.tagName;
+                item.desc = item.tagDescribe
+                return item;
+            })
+            setCheckboxOption(checkboxOptions);
+        })
     }, [])
 
     const imageChangeHandle = (files, o, i) => {
@@ -98,25 +65,23 @@ export default function NewTopicPage(props) {
         topicObj.illustrations = files;
         topicObj = Object.assign(newTopicObject, topicObj);
         setNewTopicObject(topicObj);
-        console.log(newTopicObject);
+        
     }
 
     const handleChange = (v, e) => {
         let topicObj = {}
         if(e) {
             let { id } = e.mpEvent.currentTarget;
-            id === '_n_33' ? id = 'content' : id = id;
+            id !== 'topicTitle' ? id = 'mainContent' : id = id;
             topicObj[`${id}`] = v
         } else {
-            topicObj.tags = tagCheckedList.toString();
+            topicObj.tag = tagCheckedList.toString();
         }
         topicObj = Object.assign(newTopicObject, topicObj);
         setNewTopicObject(topicObj)
-        console.log(newTopicObject);
     }
 
     const showModal = (v, e) => {
-        console.log(v,e);
         setTagModalShow(true)
     }
 
@@ -124,8 +89,7 @@ export default function NewTopicPage(props) {
         setTagCheckedList(v);
     }
 
-    const tagSearchHandle = (v, e) => {
-        console.log(v,e);
+    const tagSearchValueHandle = (v, e) => {
         setTagSearchValue(v)
     }
 
@@ -149,12 +113,17 @@ export default function NewTopicPage(props) {
         switch (key) {
             case 'cancle':
                 break;
-
             case 'yes':
                 // 修改多选框的option
-                newTag.value = newTag.label;
-                checkboxOption.unshift(newTag);
-                setCheckboxOption(checkboxOption);
+                newTag.value = newTag.tagName;
+                newTag.label = newTag.tagName;
+                newTag.desc = newTag.tagDescribe
+                let tagList = checkboxOption;
+                tagList.unshift(newTag);
+                setCheckboxOption(tagList);
+                tagApi.newTag(newTag).then(res => {
+                    console.log(res);
+                })
                 break;
         
             default:
@@ -169,11 +138,10 @@ export default function NewTopicPage(props) {
     const handleNewTagChange = (v, e) => {
         let tagObj = {}
         let { id } = e.mpEvent.currentTarget;
-        id === '_n_59' ? id = 'desc' : id = id;
+        id !== 'tagName' ? id = 'tagDescribe' : id = id;
         tagObj[`${id}`] = v
         tagObj = Object.assign(newTag, tagObj);
         setNewTag(tagObj)
-        console.log(newTag);
     }
 
     const canclePublishHandle = () => {
@@ -182,13 +150,64 @@ export default function NewTopicPage(props) {
         })
     }
     const publishHandle = () => {
-        wx.setStorage({
-            key: 'newTopic',
-            data: newTopicObject
-          })
-        wx.navigateTo({
-            url: '/pages/topicPage/index'
-          });
+        if(newTopicObject.illustrations !== undefined) {
+            newTopicObject.illustrations = newTopicObject.illustrations.map(item =>  item.url);
+            newTopicObject.illustrations = newTopicObject.illustrations.toString();
+        }
+        try {
+            newTopicObject.uid = wx.getStorageSync('uid');
+            newTopicObject.username = wx.getStorageSync('username')
+            newTopicObject.userAvatar = wx.getStorageSync('avatar')
+        if (newTopicObject.uid) {
+            topicApi.newTopic(newTopicObject).then(res => {
+                if(res.state === 200) {
+                    wx.setStorage({
+                        key: 'newTopic',
+                        data: newTopicObject
+                    })
+                    setIllustrations([]);
+                    setNewTopicObject({});
+                    wx.navigateTo({
+                        url: '/pages/topicPage/index'
+                    });
+                }
+            })
+            
+        }
+        } catch (e) {
+        } 
+        
+        
+        
+        
+        
+    }
+
+    const searchHandle = () => {
+        tagApi.fuzzyQuery(tagSearchValue).then(res => {
+            let checkboxOptions = res.data;
+            checkboxOptions = checkboxOptions.map(item => {
+                item.value = item.tagName;
+                item.label = item.tagName;
+                item.desc = item.tagDescribe
+                return item;
+            })
+            setCheckboxOption(checkboxOptions);
+        })
+    }
+
+    const clearHandle = () => {
+        setTagSearchValue('')
+        tagApi.getAllTag().then(res => {
+            let checkboxOptions = res.data;
+            checkboxOptions = checkboxOptions.map(item => {
+                item.value = item.tagName;
+                item.label = item.tagName;
+                item.desc = item.tagDescribe
+                return item;
+            })
+            setCheckboxOption(checkboxOptions);
+        })
     }
 
     return (
@@ -264,7 +283,7 @@ export default function NewTopicPage(props) {
                         <AtModalContent>
                             <AtInput
                                 title={'标签名'}
-                                name='label'
+                                name='tagName'
                                 type={'text'}
                                 placeholder={'请输入标签名'}
                                 value={newTag.label}
@@ -273,6 +292,7 @@ export default function NewTopicPage(props) {
                             />
                             <AtTextarea
                                 className={styles.formItem}
+                                name='tagDescribe'
                                 value={newTag.desc}
                                 onChange={handleNewTagChange}
                                 maxLength={100}
@@ -293,8 +313,11 @@ export default function NewTopicPage(props) {
                             <AtSearchBar
                                 showActionButton={false}
                                 value={tagSearchValue}
-                                onChange={tagSearchHandle}
+                                onChange={tagSearchValueHandle}
                                 className={styles.tagSearchBar}
+                                onConfirm={searchHandle}
+                                onActionClick={searchHandle}
+                                onClear={clearHandle}
                             />
                             <AtCheckbox
                                 options={checkboxOption}

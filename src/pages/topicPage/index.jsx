@@ -4,60 +4,11 @@ import OrtherHeaderBar from '../../components/OrtherHeaderBar/index';
 import { AtSearchBar, AtActionSheet, AtActionSheetItem  } from 'taro-ui'
 import styles from './index.module.scss';
 import TopicList from '../../components/topicList';
+import * as topicApi from '../../api/topicApi';
+import * as userApi from '../../api/userApi';
 export default function TopicPage() {
     
-    const [topicList, setTopicList] = useState([
-        {
-            title: 'Quality design resources',
-            username: `Ather`,
-            avatar: 'https://joeschmoe.io/api/v1/random',
-            description:
-                'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-            content:
-                'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.to help people create their product prototypes beautifully and efficiently.',
-            topicImage: 'https://easyhouse-bucket.oss-cn-guangzhou.aliyuncs.com/wallhaven-wqve97.png'
-        },
-        {
-            title: 'For background applications',
-            username: `Beila`,
-            avatar: 'https://joeschmoe.io/api/v1/random',
-            description:
-                'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-            content:
-                'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-            topicImage: 'https://easyhouse-bucket.oss-cn-guangzhou.aliyuncs.com/wallhaven-439z1y.jpg'
-        },
-        {
-            title: 'Refined by Ant UED',
-            username: `Duboo`,
-            avatar: 'https://joeschmoe.io/api/v1/random',
-            description:
-                'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-            content:
-                'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-            topicImage: 'https://easyhouse-bucket.oss-cn-guangzhou.aliyuncs.com/wallhaven-wqve97.png'
-        },
-        {
-            title: 'Create their product',
-            username: `Recheal`,
-            avatar: 'https://joeschmoe.io/api/v1/random',
-            description:
-                'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-            content:
-                'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-            topicImage: 'https://easyhouse-bucket.oss-cn-guangzhou.aliyuncs.com/wallhaven-wqve97.png'
-        },
-        {
-            title: 'Supply a series of design',
-            username: `Pire`,
-            avatar: 'https://joeschmoe.io/api/v1/random',
-            description:
-                'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-            content:
-                'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-            topicImage: 'https://easyhouse-bucket.oss-cn-guangzhou.aliyuncs.com/wallhaven-wqve97.png'
-        },
-    ]);
+    const [topicList, setTopicList] = useState([]);
     const [searchValue, setSearchValue] = useState('');
     const [actionSheetTitle, setActionSheetTitle] = useState('')
     const [actionSheetOpened, setActionSheetOpened] = useState(false)
@@ -70,6 +21,43 @@ export default function TopicPage() {
 
     const handleSearch = () => {
         console.log(searchValue);
+        let newTopicList = [];
+        topicApi.fuzzyQuery(searchValue).then(res1 => {
+            newTopicList = res1.data;
+        }).then(res2 => {
+            newTopicList = newTopicList.map(item => {
+                userApi.findByUsername(item.username).then(res2 => {
+                    item.avatar = res2.data.avatar;
+                    console.log(item.avatar);
+                })
+                return item;
+            })
+        })
+        
+        setTimeout(() => {
+            setTopicList(newTopicList);
+        }, 500);
+
+    }
+
+    const clearSearchHandle = () => {
+        setSearchValue('');
+        let newTopicList = [];
+        topicApi.getAllTopic().then(res1 => {
+            newTopicList = res1.data;
+        }).then(res2 => {
+            newTopicList = newTopicList.map(item => {
+                userApi.findByUsername(item.username).then(res2 => {
+                    item.avatar = res2.data.avatar;
+                    console.log(item.avatar);
+                })
+                return item;
+            })
+        }).then(res3 => {
+            setTimeout(() => {
+                setTopicList(newTopicList);
+            }, 500);
+        })
     }
 
     const selectFilterType = (key) => {
@@ -117,9 +105,13 @@ export default function TopicPage() {
     }
 
     useEffect(() => {
-        let newTopic = wx.getStorageSync('newTopic')
-        console.log(newTopic);
-        
+        let newTopic = wx.getStorageSync('newTopic');
+        let newTopicList = [];
+        topicApi.getAllTopic().then(res1 => {
+            console.log(res1);
+            newTopicList = res1.data;
+            setTopicList(newTopicList);
+        })
     },[])
 
 
@@ -130,9 +122,11 @@ export default function TopicPage() {
                 <AtSearchBar
                     value={searchValue}
                     onChange={handleChange}
+                    onConfirm={handleSearch}
                     onActionClick={handleSearch}
                     className={styles.searchInput}
                     placeholder={'请输入相关标题内容...'}
+                    onClear={clearSearchHandle}
                 />
                 <button onClick={goToNewTopic} className={styles.newTopicBtn}>新建话题</button>
             </View>

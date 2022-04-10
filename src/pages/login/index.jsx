@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text } from '@tarojs/components'
-import { AtForm, AtInput, AtButton, AtIcon } from 'taro-ui'
+import { AtForm, AtInput, AtButton, AtToast   } from 'taro-ui'
+import * as userApi from '../../api/userApi';
 
 import styles from './index.module.scss';
 export default function Login() {
@@ -54,6 +55,8 @@ export default function Login() {
   ]);
   const [registerUserObject, setRegisterUserObject] = useState({});
   const [loginUserObject, setLoginUserObject] = useState({});
+  const [loginMessageOpend, setLoginMessageOpend] = useState(false);
+  const [loginMessage, setLoginMessage] = useState('');
 
 
   useEffect(() => {
@@ -76,9 +79,13 @@ export default function Login() {
   }
 
   const registerSumbit = () => {
-    setFormType(1)
-    setLoginCardTransform('rotateY(0deg)')
-    setRegisterCardTransform('rotateY(-180deg)')
+    
+    userApi.registered(registerUserObject).then(res => {
+      console.log(res);
+      setFormType(1)
+      setLoginCardTransform('rotateY(0deg)')
+      setRegisterCardTransform('rotateY(-180deg)')
+    })
   }
 
   const registerBtnHandle = () => {
@@ -88,7 +95,45 @@ export default function Login() {
   }
 
   const loginSumbitHandle = () => {
-
+    userApi.login(loginUserObject).then(res => {
+      console.log(res);
+      
+      if(res.state === 200) {
+        console.log(res.data.uid);
+        console.log(res.data.username);
+        let uid = res.data.uid;
+        let username = res.data.username
+        let avatar = res.data.avatar
+        let token = res.data.token
+        wx.setStorageSync(
+            'uid',
+            uid
+        )
+        wx.setStorageSync(
+          'username',
+          username)
+        wx.setStorageSync(
+          'avatar',
+          avatar)
+        wx.setStorageSync(
+          'token',
+          token)
+        wx.redirectTo({
+          url: '/pages/index/index',
+        });
+      }else {
+        setLoginMessageOpend(true);
+        setLoginMessage(`${res.message}`);
+        setTimeout(() => {
+          setLoginMessageOpend(false);
+        }, 2000);
+      }
+      
+    }).then(err => {
+        if(err !== undefined) {
+          console.log(err);
+        }
+    })
   }
 
   const resetHandle = () => {
@@ -99,9 +144,16 @@ export default function Login() {
     }
   }
 
+  const goLogin = () => {
+    setFormType(1)
+    setLoginCardTransform('rotateY(0deg)')
+    setRegisterCardTransform('rotateY(-180deg)')
+  }
+
 
     return (
         <View className={styles.mainBody}>
+          <AtToast isOpened={loginMessageOpend} text={loginMessage} icon="close"></AtToast>
           <View className={styles.appName}>房无忧</View>
           <View style={{transform: loginCardTransform}} className={styles.loginCard}>
             <AtForm
@@ -111,11 +163,11 @@ export default function Login() {
                 <View className={styles.cardTitle}>登录</View>
                 <View className={styles.inputBar}>
                   <AtInput 
-                    name='account' 
+                    name='username' 
                     title='账号' 
                     type='text' 
                     placeholder='单行文本' 
-                    value={loginUserObject.account} 
+                    value={loginUserObject.username} 
                     onChange={handleChange} 
                     className={styles.inputBar}
                   />
@@ -130,7 +182,7 @@ export default function Login() {
                   />
                 </View>
                 <View className={styles.actionBar}>
-                  <AtButton onClick={loginSumbitHandle} className={styles.loginSumbit} >提交</AtButton>
+                  <AtButton onClick={loginSumbitHandle} className={styles.loginSumbit} >登录</AtButton>
                   <AtButton onClick={resetHandle} className={styles.loginReset} >重置</AtButton>
                   <AtButton onClick={registerBtnHandle} className={styles.registerBtn} >注册</AtButton>
                 </View>
@@ -162,6 +214,7 @@ export default function Login() {
                   }
                 </View>
                 <View className={styles.actionBar}>
+                  <AtButton onClick={goLogin} className={styles.registerSumbit} >登录</AtButton>
                   <AtButton onClick={registerSumbit} className={styles.registerSumbit} >提交</AtButton>
                   <AtButton onClick={resetHandle} className={styles.registerReset} >重置</AtButton>
                 </View>

@@ -9,6 +9,21 @@ export function login(data){
   })
 }
 
+export function registered(data){
+  return request({
+    url: '/users/reg',
+    method: 'post',
+    data: data,
+  })
+}
+
+export function findByUsername(username) {
+  return request({
+    url: `/users/findByUsername/${username}`,
+    method: 'post',
+  })
+} 
+
 export function getListData() {
   return request({
     url: '/users/getAllUser',

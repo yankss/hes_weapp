@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, Swiper, SwiperItem, CoverView, Map } from '@tarojs/components'
-import { AtIcon, AtTag, AtAvatar, button, AtToast, AtModal, AtModalHeader, AtModalContent, AtModalAction, AtCalendar } from 'taro-ui'
+import { View, Swiper, SwiperItem, CoverView, Map, Picker } from '@tarojs/components'
+import Taro, { Current } from '@tarojs/taro'
+import { AtIcon, AtTag, AtAvatar, AtToast, AtModal, AtModalHeader, AtModalContent, AtModalAction, AtCalendar, AtList, AtListItem } from 'taro-ui'
 import OrtherHeaderBar from '../../components/OrtherHeaderBar/index';
 import HouseList from '../../components/HouseList/index';
+import * as hosueApi from '../../api/houseApi';
+import * as houseFacilityApi from '../../api/hosueFacilityApi';
+import * as houseCollectionApi from '../../api/houseCollectionApi';
 import styles from './index.module.scss';
 export default function HouseDetailPage(props) {
 
@@ -24,29 +28,18 @@ export default function HouseDetailPage(props) {
         }
     })
     const [customMarkers, setCustomMarkers ] = useState([])
-    const [userComment, setuserComment ] = useState([
-        {
-            userImg: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-            username: '点点',
-            commentContext: '楼盘位置好，龙湖品质豪宅，户型很满意，是我扛过最满意的户型了。',
-        },
-        {
-            userImg: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-            username: '点点',
-            commentContext: '楼盘位置好，龙湖品质豪宅，户型很满意，是我扛过最满意的户型了。',
-        }
-    ])
     const [isFavorites, setIsFavorites  ] = useState(false)
     const [mapMarkers, setMapMarkers  ] = useState([])
+    const [houseData, setHouseData] = useState({})
     const [houseInfo, setHouseInfo] = useState([
         {
             value: '3室2厅1卫',
-            key: 'houseType',
+            key: 'houseLayout',
             label: '房型'
         },
         {
             value: '100',
-            key: 'area',
+            key: 'houseArea',
             label: '面积'
         },
         {
@@ -56,104 +49,136 @@ export default function HouseDetailPage(props) {
         },
         {
             value: '南',
-            key: 'orientation',
+            key: 'houseToward',
             label: '朝向'
         }
     ])
     const [equipmentList, setEquipmentList] = useState([
         {
             label: '冰箱',
-            key: true,
+            value: true,
+            key: 'haveRefrigerator'
         },
         {
-            label: '冰箱',
-            key: true,
+            label: '洗衣机',
+            value: true,
+            key: 'haveWashingMachine'
         },
         {
-            label: '冰箱',
-            key: true,
+            label: '热水器',
+            value: true,
+            key: 'haveWaterHeater'
         },
         {
-            label: '冰箱',
-            key: true,
+            label: '空调',
+            value: true,
+            key: 'haveAirConditioner'
         },
         {
-            label: '冰箱',
-            key: true,
+            label: '沙发',
+            value: true,
+            key: 'haveSofa'
         },
         {
-            label: '冰箱',
-            key: true,
+            label: '油烟机',
+            value: true,
+            key: 'haveLampblackMachine'
         },
         {
-            label: '冰箱',
-            key: true,
+            label: '燃气灶',
+            value: true,
+            key: 'haveKitchenBurningGas'
         },
         {
-            label: '冰箱',
-            key: true,
+            label: '可做饭',
+            value: true,
+            key: 'haveCookMeal'
         },
         {
-            label: '冰箱',
-            key: true,
+            label: '电视',
+            value: true,
+            key: 'haveTv'
         },
         {
-            label: '冰箱',
-            key: true,
+            label: '宽带',
+            value: true,
+            key: 'haveNetwork'
         },
         {
-            label: '冰箱',
-            key: true,
+            label: '衣柜',
+            value: true,
+            key: 'haveWardrobe'
         },
         {
-            label: '冰箱',
-            key: true,
+            label: '床',
+            value: true,
+            key: 'haveBed'
         },
         {
-            label: '冰箱',
-            key: true,
+            label: '卫生间',
+            value: true,
+            key: 'haveToilet'
         },
         {
-            label: '冰箱',
-            key: true,
+            label: '智能门锁',
+            value: true,
+            key: 'haveSmartLock'
         },
         {
-            label: '冰箱',
-            key: true,
+            label: '阳台',
+            value: true,
+            key: 'haveBalcony'
         },
     ]);
-    const [scrollHeight, setScrollHeight] = useState(0);
     const [openToast, setOpenToast] = useState(false);
     const [toastText, setToastText] = useState('收藏成功');
     const [toastIconType, setToastIconType] = useState('check');
     const [dateModalOpened, setDateModalOpened] = useState(false);
     const [ houseListData, setHouseListData] = useState([]);
+    const [houseTag, setHouseTag] = useState([]);
+    const [timeSel, setTimeSel] = useState('12:01')
+    const [tiemSelectOpened, setTimeSelectOpened] = useState(false);
 
     useEffect(() => {
+        let houseCollection = {
+            houseId: parseInt(Current.router.params.hid),
+            uid: parseInt(wx.getStorageSync('uid'))
+        }
+        houseCollectionApi.checkIsCollected(houseCollection).then(res => {
+            setIsFavorites(Boolean(res.data))
+        })
         setMapMarkers([normalCallout, ...customMarkers]);
-        // console.log(document);
-        setHouseListData([
-            1,2,3,4,5,
-          ])
+        setHouseListData([])
+        hosueApi.findHouseByid(parseInt(Current.router.params.hid)).then(res => {
+            let houseData = {};
+            let hi = [];
+            houseData = res.data;
+            houseData.tag = houseData.tag.split('、');
+            hi = houseInfo.map(item => {
+                item.value =  houseData[`${item.key}`]
+                return item;
+            })
+            setHouseInfo(hi);
+            setHouseData(houseData);
+            setHouseTag(houseData.tag)
+        }).then(res => {
+            houseFacilityApi.findHouseFacilityByid(Current.router.params.hid).then(res1 => {
+                let el = []
+                el = equipmentList.map(item => {
+                    item.value = res1.data[`${item.key}`] === 1 ? true : false;
+                    return item;
+                })
+                setEquipmentList(el)
+            })
+        })
+
     }, [])
     
-    const onScrollToUpper = (e) => {
-    }
 
     const handleSwiperClick = (e) => {
         console.log(e);
     }
     
-    const scrollTop = 0
-    const Threshold = 20
-
-    
-    const onScroll = (e) => {
-        // console.log(e.detail.scrollTop)
-        const EscrollTop = e.detail.scrollTop;
-        setScrollHeight(EscrollTop);
-    }
-
     const getMoreLandlordInfo = () => {
         wx.navigateTo({
             url: '/pages/landlordDetailInfo/index',
@@ -161,36 +186,60 @@ export default function HouseDetailPage(props) {
     }
 
     const getFavorites = () => {
+        let houseCollection = {
+            houseId: parseInt(Current.router.params.hid),
+            uid: parseInt(wx.getStorageSync('uid'))
+        }
         if(isFavorites === false) {
-            setToastText('收藏成功');
-            setToastIconType('check')
-            setIsFavorites(true)
+            houseCollectionApi.houseCollected(houseCollection).then(res => {
+                setToastText('收藏成功');
+                setToastIconType('check')
+                setIsFavorites(true)
+            })
         } else if(isFavorites === true) {
-            setToastText('取消收藏');
-            setToastIconType('blocked')
-            setIsFavorites(false)
+            houseCollectionApi.cancleCollected(houseCollection).then(res => {
+                setToastText('取消收藏');
+                setToastIconType('blocked')
+                setIsFavorites(false)
+            })
+            
         }
         setOpenToast(true)
         setTimeout(() => {
             setOpenToast(false)
-        }, 3000);
+        }, 2000);
     }
 
     const subscribeHandle = () => {
-        console.log(1111111111111);
         setDateModalOpened(true)
     }
 
     const closeModal = () => {
         setDateModalOpened(false);
     }
+
+    const dayClickHandle = (item) => {
+        // subscribeDay
+        console.log(item.value);
+        setTimeSelectOpened(true)
+    }
+
+    const onTimeChange = (e) => {
+        // subscribeTime
+        console.log(e.detail.value);
+    }
+
+
+
     
     return (
         <View className={styles.mainContainer}>
             <AtModal isOpened={dateModalOpened}>
                 <AtModalHeader>选择预约看房日期</AtModalHeader>
                 <AtModalContent>
-                    <AtCalendar />
+                    <AtCalendar
+                        onDayClick={dayClickHandle}
+                    />
                 </AtModalContent>
                 <AtModalAction>
                     <button onClick={closeModal}>取消</button>
@@ -198,19 +247,29 @@ export default function HouseDetailPage(props) {
                 </AtModalAction>
             </AtModal>
 
-            <AtToast isOpened={openToast} text={toastText} icon={toastIconType}></AtToast>
+            <AtModal isOpened={tiemSelectOpened}>
+                <AtModalHeader>选择具体时间</AtModalHeader>
+                <AtModalContent>
+                    <View className='page-section'>
+                        <View>
+                            <Picker mode='time' onChange={onTimeChange}>
+                                <AtList>
+                                <AtListItem title='请选择时间' extraText={timeSel} />
+                                </AtList>
+                            </Picker>
+                        </View>
+                    </View>
+                </AtModalContent>
+                <AtModalAction>
+                    <button onClick={() => setTimeSelectOpened(false)}>取消</button>
+                    <button>确定</button>
+                </AtModalAction>
+            </AtModal>
+            
+
+            <AtToast duration={2000} isOpened={openToast} text={toastText} icon={toastIconType}></AtToast>
             <OrtherHeaderBar className={styles.aaaaa} title={'房屋详情'}/>
             <View className={styles.scrollView}>
-                {/* <ScrollView
-                    className={styles.scrollStyle}
-                    scrollY={true}
-                    scrollWithAnimation={true}
-                    scrollTop={scrollTop}
-                    lowerThreshold={Threshold}
-                    upperThreshold={Threshold}
-                    onScrollToUpper={onScrollToUpper}
-                    onScroll={onScroll}
-                > */}
                     <View>
                         <View className={styles.houseImg}>
                             <Swiper
@@ -234,9 +293,9 @@ export default function HouseDetailPage(props) {
                             </Swiper>
                         </View>
                         
-                        <View className={styles.houseTopic}>整租 | 南山风井花园 近学校 拎包入住 免停车费 免物业费 生活便利</View>
+                        <View className={styles.houseTopic}>{`整租 | ${houseData.houseTitle}`}</View>
                         <View className={styles.feeInfo}>
-                            <View className={styles.monthlRent}>2000/月</View>
+                            <View className={styles.monthlRent}>{`${houseData.monthlyRent}/月`}</View>
                             <View className={styles.payType}>押二付一 明细</View>
                         </View>
                         <View className={styles.houseInfo}>
@@ -245,7 +304,7 @@ export default function HouseDetailPage(props) {
                                     return (
                                         item.key === 'area' ? (
                                             <View key={item.key} className={styles.infoItem}>
-                                                <View>{item.value}m²</View>
+                                                <View>{`${item.value}m²`}</View>
                                                 <View className={styles.itemLabel}>{item.label}</View>
                                             </View>
                                         )
@@ -261,9 +320,14 @@ export default function HouseDetailPage(props) {
                             }
                         </View>
                         <View className={styles.houseTag}>
-                            <AtTag className={styles.tagStyle} circle={false} size="normal" active={true} type="primary">近地铁</AtTag>
-                            <AtTag className={styles.tagStyle} circle={false} size="normal" active={true} type="primary">附近商圈</AtTag>
-                            <AtTag className={styles.tagStyle} circle={false} size="normal" active={true} type="primary">光线明亮</AtTag>
+                            {
+                                houseTag.map(item => {
+                                    return (
+                                        <AtTag key={item} className={styles.tagStyle} circle={false} size="normal" active={true} type="primary">{item}</AtTag>
+                                    )
+                                    
+                                })
+                            }
                         </View>
                         <Map
                             setting={{}}
@@ -286,10 +350,7 @@ export default function HouseDetailPage(props) {
                         <View className={styles.houseIntroduce}>
                             <View className={styles.houseIntroduceTitle}>房屋介绍</View>
                             <View className={styles.houseIntroduceContext}>
-                                {
-                                    `1. 小区内部配套有：金明酒店、会展中心和即将完工的悠方大型购物中心、风情商业街以及各大小型的生活超市、科研及总部办公大楼、万博实验学校、商业金融服务中心、大型会所。
-                                    2. 小区内部配套有：金明酒店、会展中心和即将完工的悠方大型购物中心、风情商业街以及各大小型的生活超市、科研及总部办公大楼、万博实验学校、商业金融服务中心、大型会所。`
-                                }
+                                { houseData.houseDescription }
                             </View>
                             <View className={styles.equipmentList}>
                                 {
@@ -297,10 +358,10 @@ export default function HouseDetailPage(props) {
                                         return (
                                             <View className={styles.equipmentListItem} key={item.index}>
                                                 {
-                                                    item.key === true ? <AtIcon value='check' size='10' color='#000'></AtIcon>
-                                                    : <AtIcon value='close' size='10' color='#000'></AtIcon>
+                                                    item.value === true ? <AtIcon className={styles.equipmentIcon} value='check' size='10' color='#000'></AtIcon>
+                                                    : <AtIcon className={styles.equipmentIcon} value='close' size='10' color='#000'></AtIcon>
                                                 }
-                                                <View style={{fontSize: '24rpx', marginLeft: '-40rpx'}}>{item.label}</View>
+                                                <View className={styles.equipmentText} style={{fontSize: '24rpx', marginLeft: '-40rpx'}}>{item.label}</View>
                                             </View>
                                         )
                                     })
@@ -322,26 +383,6 @@ export default function HouseDetailPage(props) {
                                 查看更多<AtIcon value='chevron-right' size='11' ></AtIcon>
                             </button>
                         </View>
-                        <View className={styles.commentContainer}>
-                            <View className={styles.titleBar}>
-                                <View>用户点评 (1070)</View>
-                                <View className={styles.checkMore}>查看更多<AtIcon  value='chevron-right' size='12' color='#686869'></AtIcon></View>
-                            </View>
-                            {
-                                userComment.map((item, index) => {
-                                    return (
-                                        <View key={index}>
-                                            <View className={styles.commenterInfo}>
-                                                <AtAvatar circle image={item.userImg}>
-                                                </AtAvatar>
-                                                <View style={{marginLeft: '20rpx'}}>{item.username}</View>
-                                            </View>
-                                            <View className={styles.commentContext}>{item.commentContext}</View>
-                                        </View>
-                                    )
-                                })
-                            }
-                        </View>
                         <View className={styles.guessYouLikeContainer}>
                             <View className={styles.guessYouLikeTitle}>猜你喜欢</View>
                             <HouseList houseListData={houseListData}/>
@@ -353,16 +394,16 @@ export default function HouseDetailPage(props) {
                 {
                     isFavorites === true ? (
                     <button 
-                        onClick={getFavorites} 
+                        onClick={() => getFavorites()} 
                         type={'secondary'} 
                         size='small' 
                         className= {styles.actionBtn}
                     >
-                        <AtIcon className={styles.bottomBarTag} value='star-2' size='15' ></AtIcon>收藏
+                        <AtIcon className={styles.bottomBarTag} value='star-2' size='15' ></AtIcon>已收藏
                     </button>)
                     : (
                         <button 
-                            onClick={getFavorites} 
+                            onClick={() => getFavorites()} 
                             type={'secondary'} 
                             size='small' 
                             className= {styles.actionBtn}

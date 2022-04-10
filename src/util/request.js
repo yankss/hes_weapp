@@ -15,9 +15,8 @@ Service.interceptors.request.use(config => {
             'Access-Control-Allow-Origin': '*'
           }
   config.headers = headers;
-  let token=Taro.getStorageSync('token')||null;
-    token && (request.headers.Authorization = 'Bearer ' + token)
-    console.log(token)
+  // let token=wx.getStorageSync('token')||null;
+  // token && (request.headers.Authorization = 'Bearer ' + token)
   return config;
 }, error => {
   console.log(error)

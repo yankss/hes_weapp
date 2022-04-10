@@ -21,7 +21,7 @@ export function getNowFormatDate () {
         strDate = "0" + strDate;
     }
     let currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
-            + " " + date.getHours() + seperator2 + date.getMinutes();
-            // + seperator2 + date.getSeconds();
+            + " " + date.getHours() + seperator2 + date.getMinutes()
+            + seperator2 + date.getSeconds();
     return currentdate;
 }

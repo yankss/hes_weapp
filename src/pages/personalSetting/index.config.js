@@ -1,4 +1,4 @@
 export default {
-    navigationBarTitleText: '个人设置'
+    navigationBarTitleText: 'VR看房'
   }
   

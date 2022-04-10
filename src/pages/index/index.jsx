@@ -14,7 +14,7 @@ export default class Index extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      current: 2,
+      current: 0,
       isDelete: false,
     }
   }

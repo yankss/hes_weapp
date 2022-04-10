@@ -4,6 +4,8 @@ import { AtSegmentedControl, AtSearchBar } from 'taro-ui'
 import HouseList from '../../components/HouseList/index';
 import TopicList from '../../components/TopicList';
 import styles from './index.module.scss';
+import * as topicApi from '../../api/topicApi';
+import * as houseApi from '../../api/houseApi';
 export default function Favorites(props) {
 
     const [ current, setCurrent] = useState(0);
@@ -28,37 +30,24 @@ export default function Favorites(props) {
     }, [])
 
     useEffect(() => {
+      let uid = parseInt(wx.getStorageSync('uid'));
       if(current === 0) {
         setTopicList([]);
-        setHouseListData([
-          1,2,3,4,5,
-        ])
+        houseApi.findCollectionHouseByUid(uid).then(res => {
+          let hosueList = res.data;
+          hosueList = hosueList.map(item => {
+            item.tag = item.tag.split('、');
+            item.carouselImg = item.carouselImg.slice(0, item.carouselImg.indexOf('、'));
+            return item;
+          })
+          setHouseListData(hosueList)
+        })
       } else if (current === 1) {
-        setTopicList([
-          {
-              title: 'Quality design resources',
-              username: `Ather`,
-              avatar: 'https://joeschmoe.io/api/v1/random',
-              description:
-                  'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-              content:
-                  'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.to help people create their product prototypes beautifully and efficiently.',
-              topicImage: 'https://easyhouse-bucket.oss-cn-guangzhou.aliyuncs.com/wallhaven-72rxqo.jpg'
-          },
-          {
-              title: 'For background applications',
-              username: `Beila`,
-              avatar: 'https://joeschmoe.io/api/v1/random',
-              description:
-                  'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-              content:
-                  'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-              topicImage: 'https://easyhouse-bucket.oss-cn-guangzhou.aliyuncs.com/wallhaven-wqve97.png'
-          },
-        ])
+        topicApi.findCollectionTopicByUid(uid).then(res => {
+          setTopicList(res.data)
+        })
         setHouseListData([])
       }
-      console.log(topicList, houseListData);
     }, [current])
 
     const marinContainerStyle = {

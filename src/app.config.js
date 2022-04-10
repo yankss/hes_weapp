@@ -14,6 +14,7 @@ export default {
     'pages/newTopicPage/index',
     'pages/certificationApplication/index',
     'pages/mySubscribe/index',
+    'pages/VRHouse/index',
   ],
   window: {
     backgroundTextStyle: 'light',
