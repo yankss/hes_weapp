@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, Swiper, SwiperItem, CoverView, Map, Picker } from '@tarojs/components'
 import Taro, { Current } from '@tarojs/taro'
-import { AtIcon, AtTag, AtAvatar, AtToast, AtModal, AtModalHeader, AtModalContent, AtModalAction, AtCalendar, AtList, AtListItem } from 'taro-ui'
+import { AtIcon, AtTag, AtAvatar, AtToast, AtModal, AtModalHeader, AtModalContent, AtModalAction, AtCalendar, AtList, AtListItem, AtMessage } from 'taro-ui'
 import OrtherHeaderBar from '../../components/OrtherHeaderBar/index';
 import HouseList from '../../components/HouseList/index';
 import * as hosueApi from '../../api/houseApi';
 import * as houseFacilityApi from '../../api/hosueFacilityApi';
 import * as houseCollectionApi from '../../api/houseCollectionApi';
+import * as subscribeApi from '../../api/subscribeApi';
 import styles from './index.module.scss';
 export default function HouseDetailPage(props) {
 
@@ -136,10 +137,69 @@ export default function HouseDetailPage(props) {
     const [dateModalOpened, setDateModalOpened] = useState(false);
     const [ houseListData, setHouseListData] = useState([]);
     const [houseTag, setHouseTag] = useState([]);
-    const [timeSel, setTimeSel] = useState('12:01')
+    const [subscribeTime, setSubscribeTime] = useState('12:01')
     const [tiemSelectOpened, setTimeSelectOpened] = useState(false);
+    const [subscribeDay, setSubscribeDay] = useState('')
+
 
     useEffect(() => {
+
+        // Taro.getLocation({
+        //     type: 'wgs84',
+        //     altitude: true,
+        //     success: function (res) {
+        //       console.log(111111111111, res);
+        //     }
+        // })
+
+
+        
+         Taro.getLocation({
+            type: 'gcj02', //返回可以用于 Taro.openLocation的经纬度
+            success: function (res) {
+              console.log(11111111111111111,res);
+              const latitude = res.latitude
+              const longitude = res.longitude
+              //下载qqmap-wx-jssdk,然后引入其中的js文件
+              var QQMapWX = require('../../util/sdk/qqmap-wx-jssdk.min.js');
+              var qqmapsdk = new QQMapWX({
+                key: '347BZ-TWTK5-GT7IP-QVBX5-V3CC3-E2FCU' // 必填
+              });  
+              //逆地址解析,通过经纬度获取位置等信息
+              qqmapsdk.reverseGeocoder({
+                location:{latitude,longitude},
+                success: function(res){
+                    // 获取当前城市
+                    console.log(33333333333, res.result.address_component.city);
+                }
+              })
+            }
+        })
+        
+
+
+        //   Taro.getLocation({
+        //     type: 'gcj02', //返回可以用于 Taro.openLocation的经纬度
+        //     success: function (res) {
+        //       const latitude = res.latitude
+        //       const longitude = res.longitude
+        //       //下载qqmap-wx-jssdk,然后引入其中的js文件
+        //       var QQMapWX = require('../../util/sdk/qqmap-wx-jssdk.min.js');
+        //       var qqmapsdk = new QQMapWX({
+        //         key: '347BZ-TWTK5-GT7IP-QVBX5-V3CC3-E2FCU' // 必填
+        //       });  
+        //       //逆地址解析,通过经纬度获取位置等信息
+        //       qqmapsdk.reverseGeocoder({
+        //         location:{latitude,longitude},
+        //         success: function(res){
+        //             // 获取当前城市
+        //             console.log(33333333333, res.result.address_component.city);
+        //         }
+        //       })
+        //     }
+        // })
+
+
         let houseCollection = {
             houseId: parseInt(Current.router.params.hid),
             uid: parseInt(wx.getStorageSync('uid'))
@@ -215,25 +275,89 @@ export default function HouseDetailPage(props) {
     }
 
     const closeModal = () => {
+        setSubscribeDay('')
+        setSubscribeTime('')
         setDateModalOpened(false);
     }
 
     const dayClickHandle = (item) => {
-        // subscribeDay
-        console.log(item.value);
         setTimeSelectOpened(true)
+        setSubscribeDay(item.value);
     }
 
     const onTimeChange = (e) => {
-        // subscribeTime
-        console.log(e.detail.value);
+        setSubscribeTime(e.detail.value);
     }
 
+    const sureSubscribe = () => {
+        // 调API接口
+        let subscribeObj = {
+            uid: parseInt(wx.getStorageSync('uid')),
+            landlordId: parseInt(Current.router.params.uid),
+            houseId: parseInt(Current.router.params.hid),
+            subscribeDay,
+            subscribeTime,
+            createdUser: wx.getStorageSync('username')
+        }
+        console.log(subscribeObj);
+        subscribeApi.addSubscribe(subscribeObj).then(res => {
+            console.log(res);
+            if(res.state && res.state === 200) {
+                setDateModalOpened(false);
+                Taro.atMessage({
+                    'message': '预约成功！',
+                    'type': 'success',
+                })
+            } else {
+                Taro.atMessage({
+                    'message': res.message,
+                    'type': 'error',
+                })
+            }
+        })
+    }
+
+    const getLocation = () => {
+        console.log(111111111111);
+        Taro.chooseLocation({
+            success(res)
+            {
+                console.log(res);
+                let newNormalCallout = {
+                    id:1,
+                    latitude: res.latitude,
+                    longitude: res.longitude,
+                    enableTraffic: true,
+                    enable3D: true,
+                    callout: {
+                        content: res.name,
+                        color: '#ff0000',
+                        fontSize: 14,
+                        borderWidth: 2,
+                        borderRadius: 10,
+                        borderColor: '#000000',
+                        bgColor: '#fff',
+                        padding: 5,
+                        display: 'ALWAYS',
+                        textAlign: 'center',
+                    }
+                }
+                setMapMarkers([{
+                    id: 2,
+                    latitude: res.latitude,
+                    longitude: res.longitude,
+                },])
+                setNormalCallout(newNormalCallout);
+                console.log(newNormalCallout);
+            }
+        })
+    }
 
 
     
     return (
         <View className={styles.mainContainer}>
+            <AtMessage />
             <AtModal isOpened={dateModalOpened}>
                 <AtModalHeader>选择预约看房日期</AtModalHeader>
                 <AtModalContent>
@@ -243,7 +367,7 @@ export default function HouseDetailPage(props) {
                 </AtModalContent>
                 <AtModalAction>
                     <button onClick={closeModal}>取消</button>
-                    <button>确定</button> 
+                    <button onClick={sureSubscribe}>确定</button> 
                 </AtModalAction>
             </AtModal>
 
@@ -254,7 +378,7 @@ export default function HouseDetailPage(props) {
                         <View>
                             <Picker mode='time' onChange={onTimeChange}>
                                 <AtList>
-                                <AtListItem title='请选择时间' extraText={timeSel} />
+                                <AtListItem title='请选择时间' extraText={subscribeTime} />
                                 </AtList>
                             </Picker>
                         </View>
@@ -262,7 +386,7 @@ export default function HouseDetailPage(props) {
                 </AtModalContent>
                 <AtModalAction>
                     <button onClick={() => setTimeSelectOpened(false)}>取消</button>
-                    <button>确定</button>
+                    <button onClick={() => setTimeSelectOpened(false)}>确定</button>
                 </AtModalAction>
             </AtModal>
             
@@ -330,11 +454,12 @@ export default function HouseDetailPage(props) {
                             }
                         </View>
                         <Map
+                            onClick={getLocation}
                             setting={{}}
                             markers={mapMarkers}
-                            latitude={23.096994}
-                            longitude={113.324520}
-                            style={{ height: '15vh', width: '100vw' }}
+                            latitude={normalCallout.latitude}
+                            longitude={normalCallout.longitude}
+                            style={{ height: '25vh', width: '100vw' }}
                             >
                             <CoverView slot='callout'>
                                 {

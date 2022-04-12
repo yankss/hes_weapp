@@ -22,6 +22,13 @@ export function findByUsername(username) {
     url: `/users/findByUsername/${username}`,
     method: 'post',
   })
+}
+
+export function findByUid(uid) {
+  return request({
+    url: `/users/findByUid/${uid}`,
+    method: 'post',
+  })
 } 
 
 export function getListData() {

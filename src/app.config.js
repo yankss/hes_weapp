@@ -22,5 +22,10 @@ export default {
     navigationBarTitleText: 'WeChat',
     navigationBarTextStyle: 'black',
     navigationStyle: 'custom'
+  },
+  "permission":{
+    "scope.userLocation":{
+      "desc": "获取地理位置信息的用途描述"
+    }
   }
 }

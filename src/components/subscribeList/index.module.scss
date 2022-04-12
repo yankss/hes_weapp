@@ -35,3 +35,28 @@
 .at-action-sheet__container {
   padding: 0;
 }
+.completedSheet {
+  position: absolute;
+  right: -92vw;
+}
+.actionBtn {
+  font-weight: 100;
+  font-size: 24rpx;
+  margin: 0;
+  color: #efefef;
+  border-radius: 20rpx;
+  background: #003399;
+}
+.rateBar {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 400;
+  position: relative;
+}
+.successRate {
+  width: 100rpx;
+  height: 100rpx;
+  position: absolute;
+  right: 230rpx;
+  top: -30rpx;
+}

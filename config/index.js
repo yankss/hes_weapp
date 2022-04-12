@@ -11,6 +11,7 @@ const config = {
   outputRoot: 'dist',
   plugins: [],
   defineConstants: {
+    LOCATION_APIKEY: JSON.stringify('347BZ-TWTK5-GT7IP-QVBX5-V3CC3-E2FCU')
   },
   copy: {
     patterns: [

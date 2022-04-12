@@ -52,11 +52,37 @@ export default function Login() {
       disabled: false,
       placeholder: '请输入电子邮箱'
     },
+    {
+      label: '性别',
+      key: 'email',
+      type: 'input',
+      disabled: false,
+      placeholder: '请输入性别'
+    },
+    {
+      label: '真实姓名',
+      key: 'email',
+      type: 'input',
+      disabled: false,
+      placeholder: '请输入真实姓名'
+    },
+    {
+      label: '身份证号码',
+      key: 'email',
+      type: 'input',
+      disabled: false,
+      placeholder: '请输入身份证号码'
+    },
+
   ]);
   const [registerUserObject, setRegisterUserObject] = useState({});
   const [loginUserObject, setLoginUserObject] = useState({});
   const [loginMessageOpend, setLoginMessageOpend] = useState(false);
   const [loginMessage, setLoginMessage] = useState('');
+  const [inputContainer, setInputContainer] = useState({})
+  const [registerFormHeight, setRegisterFormHeight] = useState('90% !important')
+  const [flexBoxHeight, setFlexBoxHeight] = useState({})
+  const [isExpend, setIsExpend] = useState(false);
 
 
   useEffect(() => {
@@ -150,11 +176,34 @@ export default function Login() {
     setRegisterCardTransform('rotateY(-180deg)')
   }
 
+  const extendHandle = () => {
+    setIsExpend(true)
+    setInputContainer({
+      height: 'auto',
+      overFlow: 'auto !important'
+    })
+
+    setRegisterFormHeight('75vh !important')
+
+    setFlexBoxHeight({
+      height: '72vh !important'
+    })
+  }
+
+  const narrowHandle = () => {
+    setIsExpend(false)
+    setInputContainer({})
+    setRegisterFormHeight('')
+
+    setFlexBoxHeight({})
+  }
+
+
 
     return (
         <View className={styles.mainBody}>
           <AtToast isOpened={loginMessageOpend} text={loginMessage} icon="close"></AtToast>
-          <View className={styles.appName}>房无忧</View>
+          <image src={'https://easyhouse-bucket.oss-cn-guangzhou.aliyuncs.com/logo.png'} className={styles.appName}></image>
           <View style={{transform: loginCardTransform}} className={styles.loginCard}>
             <AtForm
               className={styles.loginForm}
@@ -192,10 +241,11 @@ export default function Login() {
           <View style={{transform: registerCardTransform}} className={styles.registerCard}>
             <AtForm
               className={styles.registerForm}
+              style={{height: registerFormHeight}}
             >
-              <View className={styles.flexBox}>
+              <View style={flexBoxHeight} className={styles.flexBox}>
                 <View className={styles.cardTitle}>注册</View>
-                <View className={styles.inputBar}>
+                <View style={inputContainer} className={styles.inputContainer}>
                   {
                     registerFormItem.map(item => {
                       return (
@@ -213,6 +263,12 @@ export default function Login() {
                     })
                   }
                 </View>
+                {
+                  isExpend === false ? 
+                  <image onClick={extendHandle} className={styles.arrowDown} src={'https://easyhouse-bucket.oss-cn-guangzhou.aliyuncs.com/arrow_down.png'}></image>
+                  :
+                  <image onClick={narrowHandle} className={styles.arrowDown} src={'https://easyhouse-bucket.oss-cn-guangzhou.aliyuncs.com/arrow-up.png'}></image>
+                }
                 <View className={styles.actionBar}>
                   <AtButton onClick={goLogin} className={styles.registerSumbit} >登录</AtButton>
                   <AtButton onClick={registerSumbit} className={styles.registerSumbit} >提交</AtButton>

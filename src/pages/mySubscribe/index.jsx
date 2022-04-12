@@ -1,54 +1,64 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text } from '@tarojs/components'
-import { AtTabs, AtTabsPane } from 'taro-ui'
+import { AtTabs, AtTabsPane, AtActivityIndicator } from 'taro-ui'
 import OrtherHeaderBar from '../../components/OrtherHeaderBar';
 import SubscribeList from '../../components/subscribeList';
 import styles from './index.module.scss';
+import * as subscribeApi from '../../api/subscribeApi';
+import * as hosueApi from '../../api/houseApi';
+import * as userApi from '../../api/userApi';
 export default function MySubscribe(props) {
 
     const [ current, setCurrent] = useState(0);
 
     const [subscribeList, setSubscribeList] = useState([])
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-      setSubscribeList([
-        {
-          landlordName: 'Qasdc',
-          houseTitle: '整租 | 南山风井花园 近学校 拎包入住 免停车费 免物业费 生活便利',
-          landLordPhone: '13466435767',
-          subscribeDate: '2022-03-12',
-          key: '1',
-          houseLocation: 'Sidney No. 1 Lake Park'
-        },
-        {
-          landlordName: 'Brown',
-          houseTitle: '整租 | 南山风井花园 近学校 拎包入住 免停车费 免物业费 生活便利',
-          landLordPhone: '13466435767',
-          subscribeDate: '2022-03-12',
-          key: '2',
-          houseLocation: 'Sidney No. 1 Lake Park'
-        },
-        {
-          landlordName: 'Joe',
-          houseTitle: '整租 | 南山风井花园 近学校 拎包入住 免停车费 免物业费 生活便利',
-          landLordPhone: '13466435767',
-          subscribeDate: '2022-03-12',
-          key: '3',
-          houseLocation: 'Sidney No. 1 Lake Park'
-        },
-        {
-          landlordName: 'Black',
-          houseTitle: '整租 | 南山风井花园 近学校 拎包入住 免停车费 免物业费 生活便利',
-          landLordPhone: '13466435767',
-          subscribeDate: '2022-03-12',
-          key: '4',
-          houseLocation: 'Sidney No. 1 Lake Park'
-        },
-      ])
+      getSubscribeList(0);
     }, [])
 
     const handleTabClick = (v) => {
       setCurrent(v)
+      if(v === 0) {
+        getSubscribeList(0)
+      } else {
+        getSubscribeList(1)
+      }
+    }
+
+    const getSubscribeList = (current) => {
+      let subscribeList = []
+      let newSubscribeList = []
+      subscribeApi.findByUid(parseInt(wx.getStorageSync('uid'))).then(res => {
+        subscribeList = res.data;
+      }).then(res => {
+        subscribeList.forEach(item => {
+          hosueApi.findHouseByid(item.houseId).then(res => {
+            let newItem = {...item, ...res.data};
+            userApi.findByUid(newItem.uid).then(res => {
+              newItem = {...newItem, ...res.data}
+              newSubscribeList.push(newItem);
+            })
+          })
+        })
+      })
+      setSubscribeList([])
+      setLoading(true)
+      setTimeout(() => {
+        if(current === 0) {
+          newSubscribeList = newSubscribeList.filter(item => {
+            return item.subscribeStatus === 0
+          })
+        } else {
+          newSubscribeList = newSubscribeList.filter(item => {
+            return item.subscribeStatus === 1
+          })
+        }
+        console.log(newSubscribeList);
+        setSubscribeList(newSubscribeList)
+        setLoading(false)
+      }, 1000);
     }
 
     const tabList = [{ title: '待处理' }, { title: '已完成' }]
@@ -56,6 +66,7 @@ export default function MySubscribe(props) {
     return (
       <View >
           <OrtherHeaderBar title={'我的预约'}/>
+          <AtActivityIndicator isOpened={loading} content='加载中...' size={60} mode='center'></AtActivityIndicator>
           <View style={{margin: '30rpx'}}>
             <AtTabs current={current} tabList={tabList} onClick={handleTabClick}>
               <AtTabsPane current={current} index={0} >

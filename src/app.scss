@@ -24,3 +24,29 @@
 .at-steps__title {
   font-size: 26rpx;
 }
+.at-message {
+  top: 15vh;
+}
+.at-form::after {
+  border: 0px;
+}
+.at-steps__single-icon--success {
+  height: 70rpx;
+  width: 70rpx;
+}
+.at-steps__single-icon {
+  font-size: 80rpx;
+}
+.at-steps__item--active .at-steps__circular {
+  height: 70rpx;
+  width: 70rpx;
+  display: flex;
+  align-items: center;
+}
+.at-progress__outer-inner-background {
+  height: 60rpx;
+}
+.at-steps__single-icon--error {
+  height: 70rpx;
+  width: 70rpx;
+}

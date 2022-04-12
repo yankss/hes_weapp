@@ -6,9 +6,9 @@ import styles from './index.module.scss';
 export default function HouseList(props) {
 
 
-    const goHouseDetail = (hid) => {
+    const goHouseDetail = (hid, uid) => {
         wx.navigateTo({
-            url: '/pages/houseDetail/index?hid=' + hid,
+            url: `/pages/houseDetail/index?hid=${hid}&uid=${uid}`
         });
     }
     const showIsDelete = (e) => {
@@ -26,7 +26,7 @@ export default function HouseList(props) {
                     props.houseListData.map((houseItem, index) => {
                         return (
                             <View key={houseItem.hid}>
-                                <View className={styles.listItem} onClick={() => goHouseDetail(houseItem.hid)}>
+                                <View className={styles.listItem} onClick={() => goHouseDetail(houseItem.hid, houseItem.uid)}>
                                     <image mode="aspectFill" className={styles.houseImg} src={houseItem.carouselImg}></image>
                                     <View className={styles.houseInfo}>
                                         <View className={styles.houseDescriptionTitle}>{`整租 | ${houseItem.houseTitle}`}</View>
